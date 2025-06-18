@@ -1,13 +1,16 @@
 {
   "private": true,
   "packageManager": "pnpm@10.12.1",
+  "pnpm": {
+    "neverBuiltDependencies": []
+  },
   "scripts": {
     "prepare": "husky",
-    "build": "tsc -b",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
+    "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
     "@types/node": "^20.19.0",
     "eslint": "^9.28.0",
     "husky": "^9.1.7",
