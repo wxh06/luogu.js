@@ -1,0 +1,34 @@
+{
+  "name": "@lgjs/request",
+  "version": "0.1.0",
+  "description": "Send parameterized requests to Luogu's APIs with sensible defaults in browsers and Node",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess tsc"
+  },
+  "keywords": [
+    "lgjs",
+    "luogu",
+    "luogu-api"
+  ],
+  "author": {
+    "name": "Xinhe Wang",
+    "email": "wangxinhe06@gmail.com",
+    "url": "https://wxh.im/"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@octokit/request": "^10.0.3"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0",
+    "typescript": "^5.8.3"
+  }
+}
