@@ -1,0 +1,17 @@
+{
+  "name": "@lgjs/types",
+  "version": "0.1.0",
+  "description": "Unofficial Luogu API type declarations",
+  "exports": {
+    ".": {
+      "types": "./luogu-api-docs/luogu-api.d.ts"
+    }
+  },
+  "keywords": [
+    "lgjs",
+    "luogu",
+    "luogu-api"
+  ],
+  "author": "ud2 <sjx233@qq.com>",
+  "license": "Unlicense"
+}
