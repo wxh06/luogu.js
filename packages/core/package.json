@@ -13,6 +13,8 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess tsc --clean",
     "check-types": "tsc --noEmit",
+    "dev": "tsup src/index.ts --format esm,cjs --sourcemap --watch --onSuccess tsc",
+    "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

@@ -12,7 +12,9 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess tsc --clean",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "dev": "tsup src/index.ts --format esm,cjs --sourcemap --watch --onSuccess tsc",
+    "lint": "eslint ."
   },
   "keywords": [
     "lgjs",

@@ -6,6 +6,11 @@
   },
   "scripts": {
     "prepare": "husky",
+    "build": "turbo run build",
+    "check-types": "turbo run check-types",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "lint:fix": "eslint --fix .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
@@ -16,6 +21,7 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
     "prettier": "^3.5.3",
+    "turbo": "^2.5.4",
     "typescript-eslint": "^8.34.0"
   }
 }

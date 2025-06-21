@@ -1,0 +1,28 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["$TURBO_DEFAULT$", ".env*", "!.npmignore"],
+      "outputs": ["dist/**"]
+    },
+    "check-types": {
+      "inputs": ["$TURBO_DEFAULT$", "!.npmignore"],
+      "dependsOn": ["^check-types"]
+    },
+    "dev": {
+      "dependsOn": ["build"],
+      "persistent": true,
+      "cache": false
+    },
+    "lint": {
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "$TURBO_ROOT$/eslint.config.*",
+        "!.npmignore"
+      ],
+      "dependsOn": ["check-types"]
+    }
+  }
+}
