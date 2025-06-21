@@ -11,7 +11,8 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess tsc",
+    "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess tsc --clean",
+    "check-types": "tsc --noEmit",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -24,6 +25,7 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@lgjs/typescript-config": "workspace:*",
     "tsup": "^8.5.0",
     "typescript": "^5.8.3"
   }
