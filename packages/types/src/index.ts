@@ -12,6 +12,8 @@ import type {
   DataResponse,
   LentilleDataResponse,
   List,
+  LoginRequest,
+  LoginResponse,
   UserData,
 } from "../luogu-api-docs/luogu-api.d.ts";
 
@@ -21,6 +23,24 @@ export type Config = Omit<ConfigResponse, "route" | "routes"> & {
   route: Record<Route, string>;
   routes: Record<Route, string>;
 };
+
+export type Method = keyof MethodRoute;
+export type Route<M extends Method = Method> = MethodRoute[M];
+
+interface MethodRoute {
+  GET:
+    | "user.show"
+    | "api.article.list"
+    | "article.list"
+    | "article.collection"
+    | "article.mine"
+    | "article.favored"
+    | "article.show"
+    | "article.replies"
+    | "article.available_collection"
+    | "captcha";
+  POST: "do_auth.password";
+}
 
 export interface RouteParams {
   "user.show": { uid: number };
@@ -39,6 +59,10 @@ export interface RouteQueryParams {
   "article.replies": { sort?: string; after?: number };
 }
 
+export interface RouteRequestBody {
+  "do_auth.password": ["application/json", LoginRequest];
+}
+
 export interface RouteResponse {
   "user.show": DataResponse<UserData>;
   "api.article.list": { articles: List<Article> };
@@ -49,17 +73,5 @@ export interface RouteResponse {
   "article.show": LentilleDataResponse<ArticleData>;
   "article.replies": { replySlice: Comment[] };
   "article.available_collection": { collections: ArticleCollectionSummary[] };
+  "do_auth.password": LoginResponse;
 }
-
-export type GetRoute =
-  | "user.show"
-  | "api.article.list"
-  | "article.list"
-  | "article.collection"
-  | "article.mine"
-  | "article.favored"
-  | "article.show"
-  | "article.replies"
-  | "article.available_collection";
-
-export type Route = GetRoute;

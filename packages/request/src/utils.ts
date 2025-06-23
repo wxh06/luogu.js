@@ -11,3 +11,14 @@ export const expandTemplate = (
         .replace(`:${key}`, encodeURIComponent(value)),
     template,
   );
+
+export const toSearchParams = (
+  params: Record<string, Primitive | undefined | null> = {},
+): URLSearchParams => {
+  const searchParams = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null)
+      searchParams.set(key, encodeURIComponent(value));
+  });
+  return searchParams;
+};

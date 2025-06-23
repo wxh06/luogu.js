@@ -1,29 +1,68 @@
-import type { Route, RouteParams, RouteQueryParams } from "@lgjs/types";
+import type {
+  Method,
+  Route,
+  RouteParams,
+  RouteQueryParams,
+  RouteRequestBody,
+  RouteResponse,
+} from "@lgjs/types";
 
-export interface JsonResponse<T> extends Response {
+interface JsonResponse<T> extends Response {
   readonly json: () => Promise<T>;
 }
 
 export type Primitive = Parameters<typeof encodeURIComponent>[0];
 
-export type Method = "GET" | "POST" | "DELETE";
-
 export interface RequestOptionsBase {
   params?: Record<string, Primitive>;
   query?: Record<string, Primitive>;
   headers?: ConstructorParameters<typeof Headers>[0];
-  body?: object | URLSearchParams;
+  body?:
+    | [contentType: "application/json", body: object]
+    | [
+        contentType: "application/x-www-form-urlencoded",
+        body: Record<string, Primitive>,
+      ]
+    | null
+    | undefined;
 }
 
-export type RequestOptions<R extends Route> = Omit<
+type AllOptional<T> = object extends T ? true : false;
+
+type RequestOptions<R extends Route> = Omit<
   RequestOptionsBase,
-  "params" | "query"
+  "params" | "query" | "body"
 > &
   (R extends keyof RouteParams
     ? { params: RouteParams[R] }
     : { params?: Record<string, never> }) &
   (R extends keyof RouteQueryParams
-    ? object extends RouteQueryParams[R]
+    ? AllOptional<RouteQueryParams[R]> extends true
       ? { query?: RouteQueryParams[R] }
       : { query: RouteQueryParams[R] }
-    : { query?: Record<string, never> });
+    : { query?: Record<string, never> }) &
+  (R extends keyof RouteRequestBody
+    ? AllOptional<RouteRequestBody[R]> extends true
+      ? { body?: RouteRequestBody[R] }
+      : { body: RouteRequestBody[R] }
+    : { body?: null | undefined });
+
+type RouteWithOptionalOptions<M extends Method> = {
+  [R in Route<M>]: AllOptional<RequestOptions<R>> extends true ? R : never;
+}[Route<M>];
+
+export interface MethodRequest<M extends Method> {
+  <
+    T extends RouteWithOptionalOptions<M>,
+    R = T extends keyof RouteResponse ? RouteResponse[T] : never,
+  >(
+    route: T,
+  ): Promise<JsonResponse<R>>;
+  <
+    T extends Route<M>,
+    R = T extends keyof RouteResponse ? RouteResponse[T] : never,
+  >(
+    route: T,
+    options: RequestOptions<T>, // eslint-disable-line @typescript-eslint/unified-signatures
+  ): Promise<JsonResponse<R>>;
+}

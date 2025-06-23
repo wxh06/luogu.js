@@ -1,15 +1,10 @@
 import { getUserAgent } from "universal-user-agent";
 
-import type { Config, GetRoute, Route, RouteResponse } from "@lgjs/types";
+import type { Config, Method, Route } from "@lgjs/types";
 
 import pkg from "../package.json";
-import type {
-  JsonResponse,
-  Method,
-  RequestOptions,
-  RequestOptionsBase,
-} from "./types.js";
-import { expandTemplate } from "./utils.js";
+import type { MethodRequest, RequestOptionsBase } from "./types.js";
+import { expandTemplate, toSearchParams } from "./utils.js";
 
 const BASE_URL = "https://www.luogu.com.cn";
 const CONFIG_PATH = "/_lfe/config";
@@ -28,10 +23,7 @@ export class Client {
     const url = new URL(
       this.baseUrl + expandTemplate(route, options.params ?? {}),
     );
-    if (options.query)
-      Object.entries(options.query).forEach(([key, value]) => {
-        if (value) url.searchParams.set(key, encodeURIComponent(value));
-      });
+    if (options.query) url.search = toSearchParams(options.query).toString();
 
     const headers = new Headers(options.headers);
     headers.set("user-agent", this.userAgent);
@@ -40,13 +32,10 @@ export class Client {
 
     let body: string | URLSearchParams | null = null;
     if (options.body) {
-      if (options.body instanceof URLSearchParams) {
-        headers.set("content-type", "application/x-www-form-urlencoded");
-        body = options.body;
-      } else {
-        headers.set("content-type", "application/json");
-        body = JSON.stringify(options.body);
-      }
+      headers.set("content-type", options.body[0]);
+      if (options.body[0] === "application/json")
+        body = JSON.stringify(options.body[1]);
+      else body = toSearchParams(options.body[1]).toString();
     }
 
     return fetch(url, { method, headers, body });
@@ -68,13 +57,15 @@ export class Client {
     return route;
   }
 
-  get = async <T extends GetRoute>(
-    route: T,
-    options: RequestOptions<T>,
-  ): Promise<JsonResponse<RouteResponse[T]>> =>
-    this.fetch(
-      "GET",
-      await this.getRoute(route),
-      options as RequestOptionsBase,
-    );
+  get: MethodRequest<"GET"> = async (
+    route: Route,
+    options?: RequestOptionsBase,
+  ): Promise<Response> =>
+    this.fetch("GET", await this.getRoute(route), options);
+
+  post: MethodRequest<"POST"> = async (
+    route: Route,
+    options?: RequestOptionsBase,
+  ): Promise<Response> =>
+    this.fetch("POST", await this.getRoute(route), options);
 }
