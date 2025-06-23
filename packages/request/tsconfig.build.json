@@ -1,0 +1,8 @@
+{
+  "extends": "@lgjs/typescript-config/tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "./src/",
+    "outDir": "./dist/"
+  },
+  "exclude": ["**/*.test.*", "**/*.test-d.*"]
+}

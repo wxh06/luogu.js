@@ -11,10 +11,12 @@
     }
   },
   "scripts": {
-    "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess tsc --clean",
+    "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess 'tsc -p tsconfig.build.json' --clean",
     "check-types": "tsc --noEmit",
     "dev": "tsup src/index.ts --format esm,cjs --sourcemap --watch --onSuccess tsc",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "vitest run --coverage --typecheck",
+    "test:watch": "vitest --watch --coverage --typecheck"
   },
   "keywords": [
     "lgjs",
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@lgjs/typescript-config": "workspace:*",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.4"
   }
 }

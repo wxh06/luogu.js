@@ -9,8 +9,10 @@ import type {
   ConfigResponse,
   CreatedArticleListData,
   CreatedArticleListParams,
+  DataResponse,
   LentilleDataResponse,
   List,
+  UserData,
 } from "../luogu-api-docs/luogu-api.d.ts";
 
 export type * from "../luogu-api-docs/luogu-api.d.ts";
@@ -21,6 +23,7 @@ export type Config = Omit<ConfigResponse, "route" | "routes"> & {
 };
 
 export interface RouteParams {
+  "user.show": { uid: number };
   "article.collection": { id: number };
   "article.show": { lid: string };
   "article.replies": { lid: string };
@@ -37,6 +40,7 @@ export interface RouteQueryParams {
 }
 
 export interface RouteResponse {
+  "user.show": DataResponse<UserData>;
   "api.article.list": { articles: List<Article> };
   "article.list": LentilleDataResponse<ArticleListData>;
   "article.collection": LentilleDataResponse<ArticleCollectionData>;
@@ -48,6 +52,7 @@ export interface RouteResponse {
 }
 
 export type GetRoute =
+  | "user.show"
   | "api.article.list"
   | "article.list"
   | "article.collection"

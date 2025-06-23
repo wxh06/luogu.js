@@ -4,7 +4,13 @@
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*", "!.npmignore"],
+      "inputs": [
+        "$TURBO_DEFAULT$",
+        "!.npmignore",
+        ".env*",
+        "!**/*.test.*",
+        "!**/*.test-d.*"
+      ],
       "outputs": ["dist/**"]
     },
     "check-types": {
@@ -23,6 +29,14 @@
         "!.npmignore"
       ],
       "dependsOn": ["check-types"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "outputs": ["coverage/**"]
+    },
+    "test:watch": {
+      "cache": false,
+      "persistent": true
     }
   }
 }

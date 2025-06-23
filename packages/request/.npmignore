@@ -1,3 +1,5 @@
 *
 !src/**
+src/*.test.*
+src/*.test-d.*
 !dist/**

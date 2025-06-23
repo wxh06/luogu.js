@@ -1,5 +1,6 @@
 {
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@10.12.2",
   "pnpm": {
     "neverBuiltDependencies": []
@@ -11,17 +12,20 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "lint:fix": "eslint --fix .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --watch --coverage"
   },
   "devDependencies": {
     "@eslint/js": "^9.29.0",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.2",
     "@types/node": "^20.19.1",
+    "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.29.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
     "prettier": "^3.6.0",
     "turbo": "^2.5.4",
-    "typescript-eslint": "^8.35.0"
+    "typescript-eslint": "^8.35.0",
+    "vitest": "^3.2.4"
   }
 }
