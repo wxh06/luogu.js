@@ -1,17 +1,29 @@
 {
   "name": "@lgjs/types",
   "version": "0.1.0",
-  "description": "Unofficial Luogu API type declarations",
+  "description": "",
   "exports": {
     ".": {
-      "types": "./luogu-api-docs/luogu-api.d.ts"
+      "types": "./src/index.ts"
     }
+  },
+  "scripts": {
+    "check-types": "tsc",
+    "lint": "eslint .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "lgjs",
     "luogu",
     "luogu-api"
   ],
-  "author": "ud2 <sjx233@qq.com>",
-  "license": "Unlicense"
+  "author": {
+    "name": "Xinhe Wang",
+    "email": "wangxinhe06@gmail.com",
+    "url": "https://wxh.im/"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@lgjs/typescript-config": "workspace:*"
+  }
 }

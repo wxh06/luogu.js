@@ -1,5 +1,13 @@
 {
   "trailingComma": "all",
+  "importOrder": [
+    "<BUILTIN_MODULES>",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@lgjs/",
+    "",
+    "^[.]"
+  ],
   "importOrderTypeScriptVersion": "5.8.3",
   "plugins": ["@ianvs/prettier-plugin-sort-imports"]
 }
