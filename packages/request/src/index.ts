@@ -27,8 +27,6 @@ export class Client {
 
     const headers = new Headers(options.headers);
     headers.set("user-agent", this.userAgent);
-    headers.set("x-luogu-type", "content-only");
-    headers.set("x-lentille-request", "content-only");
 
     let body: string | URLSearchParams | null = null;
     if (options.body) {

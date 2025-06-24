@@ -1,4 +1,6 @@
 import type {
+  DataResponse,
+  LentilleDataResponse,
   Method,
   Route,
   RouteParams,
@@ -29,13 +31,14 @@ export interface RequestOptionsBase {
 
 type AllOptional<T> = object extends T ? true : false;
 
-type RequestOptions<R extends Route> = Omit<
-  RequestOptionsBase,
-  "params" | "query" | "body"
-> &
-  (R extends keyof RouteParams
-    ? { params: RouteParams[R] }
-    : { params?: Record<string, never> }) &
+type RequestOptions<R extends Route> = {
+  headers?: {
+    "x-luogu-type"?: "content-only";
+    "x-lentille-request"?: "content-only";
+  };
+} & (R extends keyof RouteParams
+  ? { params: RouteParams[R] }
+  : { params?: Record<string, never> }) &
   (R extends keyof RouteQueryParams
     ? AllOptional<RouteQueryParams[R]> extends true
       ? { query?: RouteQueryParams[R] }
@@ -51,18 +54,36 @@ type RouteWithOptionalOptions<M extends Method> = {
   [R in Route<M>]: AllOptional<RequestOptions<R>> extends true ? R : never;
 }[Route<M>];
 
+type FetchResponseExclude<R extends Route, U> = JsonResponse<
+  R extends keyof RouteResponse
+    ? RouteResponse[R] extends U
+      ? never
+      : RouteResponse[R]
+    : never
+>;
+
 export interface MethodRequest<M extends Method> {
-  <
-    T extends RouteWithOptionalOptions<M>,
-    R = T extends keyof RouteResponse ? RouteResponse[T] : never,
-  >(
-    route: T,
-  ): Promise<JsonResponse<R>>;
-  <
-    T extends Route<M>,
-    R = T extends keyof RouteResponse ? RouteResponse[T] : never,
-  >(
-    route: T,
-    options: RequestOptions<T>, // eslint-disable-line @typescript-eslint/unified-signatures
-  ): Promise<JsonResponse<R>>;
+  <R extends RouteWithOptionalOptions<M>>(
+    route: R,
+  ): Promise<
+    FetchResponseExclude<
+      R,
+      DataResponse<unknown> | LentilleDataResponse<unknown>
+    >
+  >;
+
+  <R extends Route<M>, O extends RequestOptions<R>>(
+    route: R,
+    options: O,
+  ): Promise<
+    FetchResponseExclude<
+      R,
+      | (O["headers"] extends { "x-luogu-type": "content-only" }
+          ? never
+          : DataResponse<unknown>)
+      | (O["headers"] extends { "x-lentille-request": "content-only" }
+          ? never
+          : LentilleDataResponse<unknown>)
+    >
+  >;
 }

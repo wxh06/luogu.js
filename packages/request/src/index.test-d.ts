@@ -1,6 +1,13 @@
-import { assertType, describe, expectTypeOf, test } from "vitest";
+import { describe, expectTypeOf, test } from "vitest";
 
-import type { DataResponse, UserData } from "@lgjs/types";
+import type {
+  Article,
+  ArticleListData,
+  DataResponse,
+  LentilleDataResponse,
+  List,
+  UserData,
+} from "@lgjs/types";
 
 import { Client } from "./index.js";
 
@@ -73,12 +80,67 @@ describe("options", () => {
 
 describe("response", () => {
   test("json", async () => {
-    assertType<DataResponse<UserData>>(
-      await (await client.get("user.show", { params: { uid: 108135 } })).json(),
-    );
+    expectTypeOf(
+      await (
+        await client.get("api.article.list", { query: { user: 1 } })
+      ).json(),
+    ).toEqualTypeOf<{ articles: List<Article> }>();
   });
 
   test("image", async () => {
     expectTypeOf(await (await client.get("captcha", {})).json()).toBeNever();
+  });
+
+  test("data response", async () => {
+    expectTypeOf(
+      await (await client.get("user.show", { params: { uid: 108135 } })).json(),
+    ).toBeNever();
+
+    type UserDataResponse = DataResponse<UserData>;
+    expectTypeOf(
+      await (
+        await client.get("user.show", {
+          headers: { "x-luogu-type": "content-only" },
+          params: { uid: 108135 },
+        })
+      ).json(),
+    ).toEqualTypeOf<UserDataResponse>();
+    expectTypeOf(
+      await (
+        await client.get("user.show", {
+          headers: {
+            "x-luogu-type": "content-only",
+            "x-lentille-request": "content-only",
+          },
+          params: { uid: 108135 },
+        })
+      ).json(),
+    ).toEqualTypeOf<UserDataResponse>();
+  });
+
+  test("lentille data response", async () => {
+    expectTypeOf(await (await client.get("article.list")).json()).toBeNever();
+    expectTypeOf(
+      await (await client.get("article.list", {})).json(),
+    ).toBeNever();
+
+    type ArticleListDataResponse = LentilleDataResponse<ArticleListData>;
+    expectTypeOf(
+      await (
+        await client.get("article.list", {
+          headers: { "x-lentille-request": "content-only" },
+        })
+      ).json(),
+    ).toEqualTypeOf<ArticleListDataResponse>();
+    expectTypeOf(
+      await (
+        await client.get("article.list", {
+          headers: {
+            "x-luogu-type": "content-only",
+            "x-lentille-request": "content-only",
+          },
+        })
+      ).json(),
+    ).toEqualTypeOf<ArticleListDataResponse>();
   });
 });
