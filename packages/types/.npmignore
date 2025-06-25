@@ -1,4 +1,3 @@
 *
-!src/**
 !luogu-api-docs/*.ts
 !luogu-api-docs/*LICENSE

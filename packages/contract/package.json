@@ -1,7 +1,7 @@
 {
-  "name": "@lgjs/request",
+  "name": "@lgjs/contract",
   "version": "0.1.0",
-  "description": "Send parameterized requests to Luogu's APIs with sensible defaults in browsers and Node",
+  "description": "",
   "type": "module",
   "exports": {
     ".": {
@@ -31,7 +31,10 @@
   "license": "MIT",
   "dependencies": {
     "@lgjs/types": "workspace:^",
-    "universal-user-agent": "^7.0.3"
+    "zod": "^3.25.67"
+  },
+  "peerDependencies": {
+    "@ts-rest/core": "3.53.0-rc.1"
   },
   "devDependencies": {
     "@lgjs/typescript-config": "workspace:*",
