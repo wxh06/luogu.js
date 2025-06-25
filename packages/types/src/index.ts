@@ -30,6 +30,7 @@ export type Route<M extends Method = Method> = MethodRoute[M];
 interface MethodRoute {
   GET:
     | "user.show"
+    | "auth.login"
     | "api.article.list"
     | "article.list"
     | "article.collection"

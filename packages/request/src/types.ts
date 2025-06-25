@@ -31,11 +31,14 @@ export interface RequestOptionsBase {
 
 type AllOptional<T> = object extends T ? true : false;
 
+interface RequestHeaders {
+  "x-csrf-token"?: string;
+  "x-luogu-type"?: "content-only";
+  "x-lentille-request"?: "content-only";
+}
+
 type RequestOptions<R extends Route> = {
-  headers?: {
-    "x-luogu-type"?: "content-only";
-    "x-lentille-request"?: "content-only";
-  };
+  headers?: RequestHeaders;
 } & (R extends keyof RouteParams
   ? { params: RouteParams[R] }
   : { params?: Record<string, never> }) &
