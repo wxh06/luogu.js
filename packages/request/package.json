@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --sourcemap --onSuccess 'tsc -p tsconfig.build.json' --clean",
     "check-types": "tsc --noEmit",
-    "dev": "tsup src/index.ts --format esm,cjs --sourcemap --watch --onSuccess tsc",
+    "dev": "tsup src/index.ts --format esm,cjs --sourcemap --watch --onSuccess 'tsc -p tsconfig.build.json'",
     "lint": "eslint .",
     "test": "vitest run --coverage --typecheck",
     "test:watch": "vitest --watch --coverage --typecheck"
