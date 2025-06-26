@@ -18,7 +18,7 @@ export type Primitive = Parameters<typeof encodeURIComponent>[0];
 export interface RequestOptionsBase {
   params?: Record<string, Primitive>;
   query?: Record<string, Primitive>;
-  headers?: ConstructorParameters<typeof Headers>[0];
+  headers?: Record<string, Primitive | null>;
   body?:
     | [contentType: "application/json", body: object]
     | [
@@ -31,10 +31,11 @@ export interface RequestOptionsBase {
 
 type AllOptional<T> = object extends T ? true : false;
 
-interface RequestHeaders {
-  "x-csrf-token"?: string;
-  "x-luogu-type"?: "content-only";
-  "x-lentille-request"?: "content-only";
+export interface RequestHeaders {
+  "user-agent"?: string | null;
+  "x-csrf-token"?: string | null;
+  "x-luogu-type"?: "content-only" | null;
+  "x-lentille-request"?: "content-only" | null;
 }
 
 type RequestOptions<R extends Route> = {
@@ -65,26 +66,38 @@ type FetchResponseExclude<R extends Route, U> = JsonResponse<
     : never
 >;
 
-export interface MethodRequest<M extends Method> {
+export interface MethodRequest<
+  M extends Method,
+  H extends RequestHeaders = object,
+> {
   <R extends RouteWithOptionalOptions<M>>(
     route: R,
   ): Promise<
     FetchResponseExclude<
       R,
-      DataResponse<unknown> | LentilleDataResponse<unknown>
+      | (H extends { "x-luogu-type": "content-only" }
+          ? never
+          : DataResponse<unknown>)
+      | (H extends { "x-lentille-request": "content-only" }
+          ? never
+          : LentilleDataResponse<unknown>)
     >
   >;
 
-  <R extends Route<M>, O extends RequestOptions<R>>(
+  <
+    R extends Route<M>,
+    O extends RequestOptions<R>,
+    Headers = Omit<H, keyof O["headers"]> & O["headers"],
+  >(
     route: R,
     options: O,
   ): Promise<
     FetchResponseExclude<
       R,
-      | (O["headers"] extends { "x-luogu-type": "content-only" }
+      | (Headers extends { "x-luogu-type": "content-only" }
           ? never
           : DataResponse<unknown>)
-      | (O["headers"] extends { "x-lentille-request": "content-only" }
+      | (Headers extends { "x-lentille-request": "content-only" }
           ? never
           : LentilleDataResponse<unknown>)
     >

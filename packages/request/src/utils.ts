@@ -22,3 +22,13 @@ export const toSearchParams = (
   });
   return searchParams;
 };
+
+export function addHeaders(
+  headers: Headers,
+  extra: Record<string, Primitive | null> = {},
+) {
+  Object.entries(extra).forEach(([key, value]) => {
+    if (value !== null) headers.set(key, encodeURIComponent(value));
+    else headers.delete(key);
+  });
+}

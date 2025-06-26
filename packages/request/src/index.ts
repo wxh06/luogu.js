@@ -3,17 +3,35 @@ import { getUserAgent } from "universal-user-agent";
 import type { Config, Method, Route } from "@lgjs/types";
 
 import pkg from "../package.json";
-import type { MethodRequest, RequestOptionsBase } from "./types.js";
-import { expandTemplate, toSearchParams } from "./utils.js";
+import type {
+  MethodRequest,
+  RequestHeaders,
+  RequestOptionsBase,
+} from "./types.js";
+import { addHeaders, expandTemplate, toSearchParams } from "./utils.js";
 
 const BASE_URL = "https://www.luogu.com.cn";
 const CONFIG_PATH = "/_lfe/config";
 const ROUTE_KEY = "route";
 
-export class Client {
-  userAgent = `lgjs-request/${pkg.version} ${getUserAgent()}`;
+export class Client<H extends RequestHeaders = object> {
   private config: Config | undefined;
-  constructor(private baseUrl: string = BASE_URL) {}
+  private baseUrl: string;
+  private defaultHeaders: Headers;
+  constructor(
+    options: {
+      baseUrl?: string;
+      headers?: H;
+    } = {},
+  ) {
+    this.baseUrl = options.baseUrl ?? BASE_URL;
+    this.defaultHeaders = new Headers();
+    this.defaultHeaders.set(
+      "user-agent",
+      `lgjs-request/${pkg.version} ${getUserAgent()}`,
+    );
+    addHeaders(this.defaultHeaders, { ...options.headers });
+  }
 
   async fetch(
     method: Method,
@@ -25,8 +43,8 @@ export class Client {
     );
     if (options.query) url.search = toSearchParams(options.query).toString();
 
-    const headers = new Headers(options.headers);
-    headers.set("user-agent", this.userAgent);
+    const headers = new Headers(this.defaultHeaders);
+    addHeaders(headers, options.headers);
 
     let body: string | URLSearchParams | null = null;
     if (options.body) {
@@ -55,13 +73,13 @@ export class Client {
     return route;
   }
 
-  get: MethodRequest<"GET"> = async (
+  get: MethodRequest<"GET", H> = async (
     route: Route,
     options?: RequestOptionsBase,
   ): Promise<Response> =>
     this.fetch("GET", await this.getRoute(route), options);
 
-  post: MethodRequest<"POST"> = async (
+  post: MethodRequest<"POST", H> = async (
     route: Route,
     options?: RequestOptionsBase,
   ): Promise<Response> =>

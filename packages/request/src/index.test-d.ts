@@ -123,6 +123,23 @@ describe("response", () => {
     expectTypeOf(
       await (await client.get("article.list", {})).json(),
     ).toBeNever();
+    expectTypeOf(
+      await (await client.get("article.list", { headers: {} })).json(),
+    ).toBeNever();
+    expectTypeOf(
+      await (
+        await client.get("article.list", {
+          headers: { "x-lentille-request": null },
+        })
+      ).json(),
+    ).toBeNever();
+    expectTypeOf(
+      await (
+        await new Client({
+          headers: { "x-lentille-request": "content-only" },
+        }).get("article.list", { headers: { "x-lentille-request": null } })
+      ).json(),
+    ).toBeNever();
 
     type ArticleListDataResponse = LentilleDataResponse<ArticleListData>;
     expectTypeOf(
@@ -140,6 +157,28 @@ describe("response", () => {
             "x-lentille-request": "content-only",
           },
         })
+      ).json(),
+    ).toEqualTypeOf<ArticleListDataResponse>();
+
+    expectTypeOf(
+      await (
+        await new Client({
+          headers: { "x-lentille-request": "content-only" },
+        }).get("article.list")
+      ).json(),
+    ).toEqualTypeOf<ArticleListDataResponse>();
+    expectTypeOf(
+      await (
+        await new Client({
+          headers: { "x-lentille-request": "content-only" },
+        }).get("article.list", {})
+      ).json(),
+    ).toEqualTypeOf<ArticleListDataResponse>();
+    expectTypeOf(
+      await (
+        await new Client({
+          headers: { "x-lentille-request": "content-only" },
+        }).get("article.list", { headers: {} })
       ).json(),
     ).toEqualTypeOf<ArticleListDataResponse>();
   });
