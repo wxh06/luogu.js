@@ -15,7 +15,8 @@ interface JsonResponse<T> extends Response {
 
 export type Primitive = Parameters<typeof encodeURIComponent>[0];
 
-export interface RequestOptionsBase {
+export interface RequestOptionsBase
+  extends Omit<RequestInit, "method" | "headers" | "body"> {
   params?: Record<string, Primitive>;
   query?: Record<string, Primitive>;
   headers?: Record<string, Primitive | null>;
@@ -37,9 +38,13 @@ export interface RequestHeaders {
   "x-lentille-request"?: "content-only" | null;
 }
 
-type RequestOptions<R extends Route, M extends Method> = ("GET" extends M
-  ? { headers?: RequestHeaders }
-  : { headers: RequestHeaders & { "x-csrf-token": string } }) &
+type RequestOptions<R extends Route, M extends Method> = Omit<
+  RequestInit,
+  "method" | "headers" | "body"
+> &
+  ("GET" extends M
+    ? { headers?: RequestHeaders }
+    : { headers: RequestHeaders & { "x-csrf-token": string } }) &
   (R extends keyof RouteParams
     ? { params: RouteParams[R] }
     : { params?: Record<string, never> }) &

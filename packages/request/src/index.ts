@@ -36,12 +36,10 @@ export class Client<H extends RequestHeaders = object> {
   async fetch(
     method: Method,
     route: string,
-    options: RequestOptionsBase = {},
+    { params, query, ...options }: RequestOptionsBase = {},
   ): Promise<Response> {
-    const url = new URL(
-      this.baseUrl + expandTemplate(route, options.params ?? {}),
-    );
-    if (options.query) url.search = toSearchParams(options.query).toString();
+    const url = new URL(this.baseUrl + expandTemplate(route, params ?? {}));
+    if (query) url.search = toSearchParams(query).toString();
 
     const headers = new Headers(this.defaultHeaders);
     addHeaders(headers, options.headers);
@@ -54,7 +52,7 @@ export class Client<H extends RequestHeaders = object> {
       else body = toSearchParams(options.body[1]).toString();
     }
 
-    return fetch(url, { method, headers, body });
+    return fetch(url, { ...options, method, headers, body });
   }
 
   async getConfig(): Promise<Config> {
