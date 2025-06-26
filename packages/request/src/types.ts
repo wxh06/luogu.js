@@ -33,16 +33,16 @@ type AllOptional<T> = object extends T ? true : false;
 
 export interface RequestHeaders {
   "user-agent"?: string | null;
-  "x-csrf-token"?: string | null;
   "x-luogu-type"?: "content-only" | null;
   "x-lentille-request"?: "content-only" | null;
 }
 
-type RequestOptions<R extends Route> = {
-  headers?: RequestHeaders;
-} & (R extends keyof RouteParams
-  ? { params: RouteParams[R] }
-  : { params?: Record<string, never> }) &
+type RequestOptions<R extends Route, M extends Method> = ("GET" extends M
+  ? { headers?: RequestHeaders }
+  : { headers: RequestHeaders & { "x-csrf-token": string } }) &
+  (R extends keyof RouteParams
+    ? { params: RouteParams[R] }
+    : { params?: Record<string, never> }) &
   (R extends keyof RouteQueryParams
     ? AllOptional<RouteQueryParams[R]> extends true
       ? { query?: RouteQueryParams[R] }
@@ -55,7 +55,7 @@ type RequestOptions<R extends Route> = {
     : { body?: null | undefined });
 
 type RouteWithOptionalOptions<M extends Method> = {
-  [R in Route<M>]: AllOptional<RequestOptions<R>> extends true ? R : never;
+  [R in Route<M>]: AllOptional<RequestOptions<R, M>> extends true ? R : never;
 }[Route<M>];
 
 type FetchResponseExclude<R extends Route, U> = JsonResponse<
@@ -86,7 +86,7 @@ export interface MethodRequest<
 
   <
     R extends Route<M>,
-    O extends RequestOptions<R>,
+    O extends RequestOptions<R, M>,
     Headers = Omit<H, keyof O["headers"]> & O["headers"],
   >(
     route: R,

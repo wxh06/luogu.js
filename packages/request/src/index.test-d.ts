@@ -58,6 +58,22 @@ describe("options", () => {
     await client.get("captcha", { query: { _t: 1 } });
   });
 
+  test("headers", async () => {
+    // @ts-expect-error 'headers' is required
+    await client.post("do_auth.password", {
+      body: ["application/json", { username: "", password: "", captcha: "" }],
+    });
+    await client.post("do_auth.password", {
+      body: ["application/json", { username: "", password: "", captcha: "" }],
+      // @ts-expect-error 'x-csrf-token' is required
+      headers: {},
+    });
+    await client.post("do_auth.password", {
+      body: ["application/json", { username: "", password: "", captcha: "" }],
+      headers: { "x-csrf-token": "" },
+    });
+  });
+
   test("body", async () => {
     // @ts-expect-error options is required
     await client.post("do_auth.password");
@@ -69,6 +85,7 @@ describe("options", () => {
     await client.post("do_auth.password", { body: ["application/json", {}] });
     await client.post("do_auth.password", {
       body: ["application/json", { username: "", password: "", captcha: "" }],
+      headers: { "x-csrf-token": "" },
     });
 
     await client.get("captcha", { body: null });
