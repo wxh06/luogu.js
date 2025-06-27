@@ -15,7 +15,6 @@ const CONFIG_PATH = "/_lfe/config";
 const ROUTE_KEY = "route";
 
 export class RequestClient<H extends RequestHeaders = object> {
-  private config: Config | undefined;
   readonly baseUrl: string;
   private readonly defaultHeaders: Headers;
   constructor(
@@ -33,14 +32,17 @@ export class RequestClient<H extends RequestHeaders = object> {
     addHeaders(this.defaultHeaders, { ...options.headers });
   }
 
-  withHeaders = <T>(headers: T): RequestClient<Omit<H, keyof T> & T> =>
-    new RequestClient({
+  withHeaders<T>(headers: T): RequestClient<Omit<H, keyof T> & T> {
+    const client = new RequestClient({
       baseUrl: this.baseUrl,
       headers: {
         ...Object.fromEntries(this.defaultHeaders),
         ...headers,
       },
     });
+    client._config = this._config;
+    return client;
+  }
 
   async fetch(
     method: Method,
@@ -64,6 +66,14 @@ export class RequestClient<H extends RequestHeaders = object> {
     return fetch(url, { ...options, method, headers, body });
   }
 
+  private _config: Config | Record<string, never> = {};
+  private get config(): Config | undefined {
+    if (Object.keys(this._config).length === 0) return undefined;
+    return this._config as Config;
+  }
+  private set config(value: Config | undefined) {
+    if (value) Object.assign(this._config, value);
+  }
   async getConfig(): Promise<Config> {
     if (!this.config) {
       const response = await this.fetch("GET", CONFIG_PATH);
