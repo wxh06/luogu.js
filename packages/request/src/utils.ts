@@ -25,10 +25,10 @@ export const toSearchParams = (
 
 export function addHeaders(
   headers: Headers,
-  extra: Record<string, Primitive | null> = {},
+  extra: Record<string, string | null> = {},
 ) {
   Object.entries(extra).forEach(([key, value]) => {
-    if (value !== null) headers.set(key, encodeURIComponent(value));
+    if (value !== null) headers.set(key, value);
     else headers.delete(key);
   });
 }

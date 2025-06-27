@@ -82,14 +82,16 @@ describe("options", () => {
     );
 
     // @ts-expect-error 'x-csrf-token' is required
-    await client.headers({}).post("api.auth.logout");
+    await client.withHeaders({}).post("api.auth.logout");
     // @ts-expect-error 'x-csrf-token' is required
-    await client.headers({}).post("api.auth.logout", {});
+    await client.withHeaders({}).post("api.auth.logout", {});
     // @ts-expect-error 'x-csrf-token' is required
-    await client.headers({}).post("api.auth.logout", { headers: {} });
-    await client.headers({ "x-csrf-token": "" }).post("api.auth.logout", {});
+    await client.withHeaders({}).post("api.auth.logout", { headers: {} });
     await client
-      .headers({ "x-csrf-token": "" })
+      .withHeaders({ "x-csrf-token": "" })
+      .post("api.auth.logout", {});
+    await client
+      .withHeaders({ "x-csrf-token": "" })
       .post("api.auth.logout", { headers: {} });
   });
 

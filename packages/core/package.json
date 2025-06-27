@@ -18,7 +18,9 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "luogu"
+    "lgjs",
+    "luogu",
+    "luogu-api"
   ],
   "author": {
     "name": "Xinhe Wang",
@@ -26,6 +28,11 @@
     "url": "https://wxh.im/"
   },
   "license": "MIT",
+  "dependencies": {
+    "@lgjs/request": "workspace:^",
+    "undici": "^7.11.0",
+    "universal-user-agent": "^7.0.3"
+  },
   "devDependencies": {
     "@lgjs/typescript-config": "workspace:*",
     "tsup": "^8.5.0",

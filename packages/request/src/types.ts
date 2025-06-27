@@ -19,7 +19,7 @@ export interface RequestOptionsBase
   extends Omit<RequestInit, "method" | "headers" | "body"> {
   params?: Record<string, Primitive>;
   query?: Record<string, Primitive>;
-  headers?: Record<string, Primitive | null>;
+  headers?: Record<string, string | null>;
   body?:
     | [contentType: "application/json", body: object]
     | [

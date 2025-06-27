@@ -33,7 +33,7 @@ export class RequestClient<H extends RequestHeaders = object> {
     addHeaders(this.defaultHeaders, { ...options.headers });
   }
 
-  headers = <T>(headers: T): RequestClient<Omit<H, keyof T> & T> =>
+  withHeaders = <T>(headers: T): RequestClient<Omit<H, keyof T> & T> =>
     new RequestClient({
       baseUrl: this.baseUrl,
       headers: {
