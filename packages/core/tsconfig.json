@@ -1,7 +1,6 @@
 {
   "extends": "@lgjs/typescript-config/tsconfig.base.json",
   "compilerOptions": {
-    "rootDir": "./src/",
-    "outDir": "./dist/"
+    "noEmit": true
   }
 }
