@@ -14,10 +14,10 @@ const BASE_URL = "https://www.luogu.com.cn";
 const CONFIG_PATH = "/_lfe/config";
 const ROUTE_KEY = "route";
 
-export class Client<H extends RequestHeaders = object> {
+export class RequestClient<H extends RequestHeaders = object> {
   private config: Config | undefined;
-  private baseUrl: string;
-  private defaultHeaders: Headers;
+  readonly baseUrl: string;
+  private readonly defaultHeaders: Headers;
   constructor(
     options: {
       baseUrl?: string;
@@ -32,6 +32,15 @@ export class Client<H extends RequestHeaders = object> {
     );
     addHeaders(this.defaultHeaders, { ...options.headers });
   }
+
+  headers = <T>(headers: T): RequestClient<Omit<H, keyof T> & T> =>
+    new RequestClient({
+      baseUrl: this.baseUrl,
+      headers: {
+        ...Object.fromEntries(this.defaultHeaders),
+        ...headers,
+      },
+    });
 
   async fetch(
     method: Method,

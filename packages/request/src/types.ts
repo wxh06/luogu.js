@@ -34,17 +34,21 @@ type AllOptional<T> = object extends T ? true : false;
 
 export interface RequestHeaders {
   "user-agent"?: string | null;
+  "x-csrf-token"?: string | null;
   "x-luogu-type"?: "content-only" | null;
   "x-lentille-request"?: "content-only" | null;
 }
 
-type RequestOptions<R extends Route, M extends Method> = Omit<
-  RequestInit,
-  "method" | "headers" | "body"
-> &
+type RequestOptions<
+  R extends Route,
+  M extends Method,
+  H extends RequestHeaders,
+> = Omit<RequestInit, "method" | "headers" | "body"> &
   ("GET" extends M
     ? { headers?: RequestHeaders }
-    : { headers: RequestHeaders & { "x-csrf-token": string } }) &
+    : H extends { "x-csrf-token": string }
+      ? { headers?: RequestHeaders }
+      : { headers: RequestHeaders & { "x-csrf-token": string } }) &
   (R extends keyof RouteParams
     ? { params: RouteParams[R] }
     : { params?: Record<string, never> }) &
@@ -59,8 +63,10 @@ type RequestOptions<R extends Route, M extends Method> = Omit<
       : { body: RouteRequestBody[R] }
     : { body?: null | undefined });
 
-type RouteWithOptionalOptions<M extends Method> = {
-  [R in Route<M>]: AllOptional<RequestOptions<R, M>> extends true ? R : never;
+type RouteWithOptionalOptions<M extends Method, H extends RequestHeaders> = {
+  [R in Route<M>]: AllOptional<RequestOptions<R, M, H>> extends true
+    ? R
+    : never;
 }[Route<M>];
 
 type FetchResponseExclude<R extends Route, U> = JsonResponse<
@@ -75,7 +81,7 @@ export interface MethodRequest<
   M extends Method,
   H extends RequestHeaders = object,
 > {
-  <R extends RouteWithOptionalOptions<M>>(
+  <R extends RouteWithOptionalOptions<M, H>>(
     route: R,
   ): Promise<
     FetchResponseExclude<
@@ -91,8 +97,8 @@ export interface MethodRequest<
 
   <
     R extends Route<M>,
-    O extends RequestOptions<R, M>,
-    Headers = Omit<H, keyof O["headers"]> & O["headers"],
+    O extends RequestOptions<R, M, Headers>,
+    Headers extends RequestHeaders = Omit<H, keyof O["headers"]> & O["headers"],
   >(
     route: R,
     options: O,

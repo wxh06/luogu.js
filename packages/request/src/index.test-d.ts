@@ -9,7 +9,7 @@ import type {
   UserData,
 } from "@lgjs/types";
 
-import { Client } from "./index.js";
+import { RequestClient as Client } from "./index.js";
 
 const client = new Client();
 
@@ -59,19 +59,38 @@ describe("options", () => {
   });
 
   test("headers", async () => {
+    // @ts-expect-error 'options' is required
+    await client.post("api.auth.logout");
     // @ts-expect-error 'headers' is required
-    await client.post("do_auth.password", {
-      body: ["application/json", { username: "", password: "", captcha: "" }],
-    });
-    await client.post("do_auth.password", {
-      body: ["application/json", { username: "", password: "", captcha: "" }],
-      // @ts-expect-error 'x-csrf-token' is required
-      headers: {},
-    });
-    await client.post("do_auth.password", {
-      body: ["application/json", { username: "", password: "", captcha: "" }],
-      headers: { "x-csrf-token": "" },
-    });
+    await client.post("api.auth.logout", {});
+    // @ts-expect-error 'x-csrf-token' is required
+    await client.post("api.auth.logout", { headers: {} });
+    await client.post("api.auth.logout", { headers: { "x-csrf-token": "" } });
+
+    // @ts-expect-error 'x-csrf-token' is required
+    await new Client({ headers: {} }).post("api.auth.logout");
+    // @ts-expect-error 'x-csrf-token' is required
+    await new Client({ headers: {} }).post("api.auth.logout", {});
+    // @ts-expect-error 'x-csrf-token' is required
+    await new Client({ headers: {} }).post("api.auth.logout", { headers: {} });
+    await new Client({ headers: { "x-csrf-token": "" } }).post(
+      "api.auth.logout",
+    );
+    await new Client({ headers: { "x-csrf-token": "" } }).post(
+      "api.auth.logout",
+      {},
+    );
+
+    // @ts-expect-error 'x-csrf-token' is required
+    await client.headers({}).post("api.auth.logout");
+    // @ts-expect-error 'x-csrf-token' is required
+    await client.headers({}).post("api.auth.logout", {});
+    // @ts-expect-error 'x-csrf-token' is required
+    await client.headers({}).post("api.auth.logout", { headers: {} });
+    await client.headers({ "x-csrf-token": "" }).post("api.auth.logout", {});
+    await client
+      .headers({ "x-csrf-token": "" })
+      .post("api.auth.logout", { headers: {} });
   });
 
   test("body", async () => {

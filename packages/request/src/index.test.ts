@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 
-import { Client } from "./index.js";
+import { RequestClient as Client } from "./index.js";
 
 const client = new Client();
 

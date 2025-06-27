@@ -40,7 +40,7 @@ interface MethodRoute {
     | "article.replies"
     | "article.available_collection"
     | "captcha";
-  POST: "do_auth.password";
+  POST: "api.auth.logout" | "do_auth.password";
 }
 
 export interface RouteParams {
