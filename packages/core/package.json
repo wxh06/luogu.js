@@ -31,12 +31,12 @@
   "license": "MIT",
   "dependencies": {
     "@lgjs/request": "workspace:^",
-    "undici": "^7.11.0",
+    "undici": "^7.16.0",
     "universal-user-agent": "^7.0.3"
   },
   "devDependencies": {
     "@lgjs/typescript-config": "workspace:*",
     "tsup": "^8.5.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.3"
   }
 }
