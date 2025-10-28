@@ -197,6 +197,13 @@ describe("response", () => {
         })
       ).json(),
     ).toEqualTypeOf<ArticleListDataResponse>();
+    expectTypeOf(
+      await (
+        await client
+          .withHeaders({ "x-lentille-request": "content-only" })
+          .get("article.list")
+      ).json(),
+    ).toEqualTypeOf<ArticleListDataResponse>();
 
     expectTypeOf(
       await (

@@ -33,6 +33,7 @@ export interface RequestOptionsBase
 type AllOptional<T> = object extends T ? true : false;
 
 export interface RequestHeaders {
+  "cookie"?: string | null;
   "user-agent"?: string | null;
   "x-csrf-token"?: string | null;
   "x-luogu-type"?: "content-only" | null;
