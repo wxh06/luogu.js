@@ -7,18 +7,18 @@ const client = new Client();
 test("user", async () => {
   const data = await client
     .get("user.show", {
-      headers: { "x-luogu-type": "content-only" },
+      headers: { "x-lentille-request": "content-only" },
       params: { uid: 108135 },
     })
     .then((res) => res.json());
-  expect(data.code).toBe(200);
-  expect(data.currentData.user.uid).toBe(108135);
+  expect(data.status).toBe(200);
+  expect(data.data.user.uid).toBe(108135);
 });
 
 test("withHeaders", async () => {
   const client = new Client();
   const clientWithHeaders = client.withHeaders({
-    "x-luogu-type": "content-only",
+    "x-lentille-request": "content-only",
   });
   await clientWithHeaders
     .get("user.show", { params: { uid: 108135 } })

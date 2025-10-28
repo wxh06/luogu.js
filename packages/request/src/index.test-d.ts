@@ -3,7 +3,6 @@ import { describe, expectTypeOf, test } from "vitest";
 import type {
   Article,
   ArticleListData,
-  DataResponse,
   LentilleDataResponse,
   List,
   UserData,
@@ -129,16 +128,16 @@ describe("response", () => {
     expectTypeOf(await (await client.get("captcha", {})).json()).toBeNever();
   });
 
-  test("data response", async () => {
+  test("lentille data response", async () => {
     expectTypeOf(
       await (await client.get("user.show", { params: { uid: 108135 } })).json(),
     ).toBeNever();
 
-    type UserDataResponse = DataResponse<UserData>;
+    type UserDataResponse = LentilleDataResponse<UserData>;
     expectTypeOf(
       await (
         await client.get("user.show", {
-          headers: { "x-luogu-type": "content-only" },
+          headers: { "x-lentille-request": "content-only" },
           params: { uid: 108135 },
         })
       ).json(),
@@ -154,9 +153,7 @@ describe("response", () => {
         })
       ).json(),
     ).toEqualTypeOf<UserDataResponse>();
-  });
 
-  test("lentille data response", async () => {
     expectTypeOf(await (await client.get("article.list")).json()).toBeNever();
     expectTypeOf(
       await (await client.get("article.list", {})).json(),

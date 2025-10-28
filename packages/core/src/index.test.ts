@@ -10,6 +10,6 @@ test("user", async () => {
       params: { uid: 108135 },
     })
     .then((res) => res.json());
-  expect(data.code).toBe(200);
-  expect(data.currentData.user.uid).toBe(108135);
+  expect(data.status).toBe(200);
+  expect(data.data.user.uid).toBe(108135);
 });

@@ -9,7 +9,6 @@ import type {
   ConfigResponse,
   CreatedArticleListData,
   CreatedArticleListParams,
-  DataResponse,
   LentilleDataResponse,
   List,
   LoginRequest,
@@ -65,7 +64,7 @@ export interface RouteRequestBody {
 }
 
 export interface RouteResponse {
-  "user.show": DataResponse<UserData>;
+  "user.show": LentilleDataResponse<UserData>;
   "api.article.list": { articles: List<Article> };
   "article.list": LentilleDataResponse<ArticleListData>;
   "article.collection": LentilleDataResponse<ArticleCollectionData>;
