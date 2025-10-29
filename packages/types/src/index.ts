@@ -13,6 +13,8 @@ import type {
   List,
   LoginRequest,
   LoginResponse,
+  PostData,
+  PostListData,
   UserData,
 } from "../luogu-api-docs/luogu-api.d.ts";
 
@@ -38,7 +40,9 @@ interface MethodRoute {
     | "article.show"
     | "article.replies"
     | "article.available_collection"
-    | "captcha";
+    | "captcha"
+    | "discuss.list"
+    | "discuss.show";
   POST: "api.auth.logout" | "do_auth.password";
 }
 
@@ -48,6 +52,7 @@ export interface RouteParams {
   "article.show": { lid: string };
   "article.replies": { lid: string };
   "article.available_collection": { lid: string };
+  "discuss.show": { id: number };
 }
 
 export interface RouteQueryParams {
@@ -57,6 +62,8 @@ export interface RouteQueryParams {
   "article.mine": CreatedArticleListParams;
   "article.favored": { page?: number };
   "article.replies": { sort?: string; after?: number };
+  "discuss.list": { forum?: string; page?: number };
+  "discuss.show": { page?: number; sort?: string };
 }
 
 export interface RouteRequestBody {
@@ -74,4 +81,6 @@ export interface RouteResponse {
   "article.replies": { replySlice: Comment[] };
   "article.available_collection": { collections: ArticleCollectionSummary[] };
   "do_auth.password": LoginResponse;
+  "discuss.list": LentilleDataResponse<PostListData>;
+  "discuss.show": LentilleDataResponse<PostData>;
 }
