@@ -1,4 +1,5 @@
 import type {
+  Activity,
   Article,
   ArticleCollectionData,
   ArticleCollectionSummary,
@@ -9,14 +10,17 @@ import type {
   ConfigResponse,
   CreatedArticleListData,
   CreatedArticleListParams,
+  DataResponse,
   LentilleDataResponse,
   List,
   LoginRequest,
   LoginResponse,
+  Paste,
   PostData,
   PostListData,
   UserData,
 } from "../luogu-api-docs/luogu-api.d.ts";
+import type { Log } from "./judgement.js";
 
 export type * from "../luogu-api-docs/luogu-api.d.ts";
 
@@ -30,8 +34,11 @@ export type Route<M extends Method = Method> = MethodRoute[M];
 
 interface MethodRoute {
   GET:
+    | "paste.show"
     | "user.show"
+    | "api.feed.list"
     | "auth.login"
+    | "judgement"
     | "api.article.list"
     | "article.list"
     | "article.collection"
@@ -47,6 +54,7 @@ interface MethodRoute {
 }
 
 export interface RouteParams {
+  "paste.show": { id: string };
   "user.show": { uid: number };
   "article.collection": { id: number };
   "article.show": { lid: string };
@@ -56,6 +64,7 @@ export interface RouteParams {
 }
 
 export interface RouteQueryParams {
+  "api.feed.list": { user?: number; page?: number };
   "api.article.list": ArticleListParams;
   "article.list": { category?: number; page?: number };
   "article.collection": { page?: number };
@@ -71,7 +80,10 @@ export interface RouteRequestBody {
 }
 
 export interface RouteResponse {
+  "paste.show": DataResponse<{ paste: Paste }>;
   "user.show": LentilleDataResponse<UserData>;
+  "api.feed.list": { feeds: List<Activity> };
+  judgement: LentilleDataResponse<{ logs: Log[] }>;
   "api.article.list": { articles: List<Article> };
   "article.list": LentilleDataResponse<ArticleListData>;
   "article.collection": LentilleDataResponse<ArticleCollectionData>;
