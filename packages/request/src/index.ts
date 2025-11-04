@@ -2,7 +2,7 @@ import { getUserAgent } from "universal-user-agent";
 
 import type { Config, Method, Route } from "@lgjs/types";
 
-import pkg from "../package.json";
+import pkg from "../package.json" with { type: "json" };
 import type {
   MethodRequest,
   RequestHeaders,

@@ -3,7 +3,7 @@ import { getUserAgent } from "universal-user-agent";
 
 import { RequestClient } from "@lgjs/request";
 
-import pkg from "../package.json";
+import pkg from "../package.json" with { type: "json" };
 
 interface ClientHeaders {
   "user-agent": string;
