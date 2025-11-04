@@ -2,6 +2,7 @@
   "name": "@lgjs/request",
   "version": "0.1.1",
   "description": "Send parameterized requests to Luogu's APIs with sensible defaults in browsers and Node",
+  "repository": "github:wxh06/luogu.js",
   "type": "module",
   "exports": {
     ".": {

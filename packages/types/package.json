@@ -2,6 +2,7 @@
   "name": "@lgjs/types",
   "version": "0.1.2",
   "description": "",
+  "repository": "github:wxh06/luogu.js",
   "exports": {
     ".": {
       "types": "./src/index.ts"

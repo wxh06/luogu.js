@@ -2,6 +2,7 @@
   "name": "@lgjs/core",
   "version": "0.1.0",
   "description": "",
+  "repository": "github:wxh06/luogu.js",
   "type": "module",
   "exports": {
     ".": {
